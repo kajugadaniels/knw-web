@@ -1,7 +1,14 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+
 import { NAV_LINKS } from "@/constants/navigation";
+import { cn } from "@/lib/utils";
 
 const Navbar = () => {
+    const pathname = usePathname();
+
     return (
         <header className="sticky top-0 z-50 w-full">
             {/* Top rail */}
@@ -42,16 +49,31 @@ const Navbar = () => {
                                 aria-label="Primary"
                                 className="relative inline-flex items-center gap-1 rounded-full border border-slate-200/70 bg-white/70 p-1 shadow-[0_16px_40px_-32px_rgba(15,23,42,0.55)] backdrop-blur"
                             >
-                                {NAV_LINKS.map((link) => (
-                                    <Link
-                                        key={link.label}
-                                        href={link.href}
-                                        className="group relative rounded-full px-4 py-2 text-sm font-semibold text-slate-700 transition hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-200"
-                                    >
-                                        <span className="relative z-10">{link.label}</span>
-                                        <span className="pointer-events-none absolute inset-0 rounded-full bg-slate-900/3 opacity-0 transition group-hover:opacity-100" />
-                                    </Link>
-                                ))}
+                                {NAV_LINKS.map((link) => {
+                                    const isActive = pathname === link.href;
+
+                                    return (
+                                        <Link
+                                            key={link.label}
+                                            href={link.href}
+                                            aria-current={isActive ? "page" : undefined}
+                                            className={cn(
+                                                "group relative rounded-full px-4 py-2 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-200",
+                                                isActive
+                                                    ? "text-slate-900"
+                                                    : "text-slate-700 hover:text-slate-900"
+                                            )}
+                                        >
+                                            <span className="relative z-10">{link.label}</span>
+                                            <span
+                                                className={cn(
+                                                    "pointer-events-none absolute inset-0 rounded-full bg-slate-900/3 transition group-hover:opacity-100",
+                                                    isActive ? "opacity-100" : "opacity-0"
+                                                )}
+                                            />
+                                        </Link>
+                                    );
+                                })}
                             </nav>
                         </div>
 
@@ -99,16 +121,31 @@ const Navbar = () => {
 
                                         {/* Links */}
                                         <nav className="mt-2 flex flex-col gap-1" aria-label="Mobile">
-                                            {NAV_LINKS.map((link) => (
-                                                <Link
-                                                    key={`${link.label}-m2`}
-                                                    href={link.href}
-                                                    className="group relative rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-200"
-                                                >
-                                                    <span className="relative z-10">{link.label}</span>
-                                                    <span className="pointer-events-none absolute inset-y-0 left-2 my-2 w-1 rounded-full bg-indigo-500 opacity-0 transition group-hover:opacity-100" />
-                                                </Link>
-                                            ))}
+                                            {NAV_LINKS.map((link) => {
+                                                const isActive = pathname === link.href;
+
+                                                return (
+                                                    <Link
+                                                        key={`${link.label}-m2`}
+                                                        href={link.href}
+                                                        aria-current={isActive ? "page" : undefined}
+                                                        className={cn(
+                                                            "group relative rounded-2xl px-4 py-3 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-200",
+                                                            isActive
+                                                                ? "bg-slate-100 text-slate-900"
+                                                                : "text-slate-900 hover:bg-slate-100"
+                                                        )}
+                                                    >
+                                                        <span className="relative z-10">{link.label}</span>
+                                                        <span
+                                                            className={cn(
+                                                                "pointer-events-none absolute inset-y-0 left-2 my-2 w-1 rounded-full bg-indigo-500 transition",
+                                                                isActive ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                                                            )}
+                                                        />
+                                                    </Link>
+                                                );
+                                            })}
                                         </nav>
                                     </div>
 
